@@ -15,15 +15,28 @@
  * limitations under the License.
  */
 
-package org.apache.aries.osgi.functional;
+package org.apache.aries.osgi.functional.internal;
 
 import org.osgi.framework.BundleContext;
+
+import java.util.function.Consumer;
 
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
+public class BundleContextOSGiImpl extends OSGiImpl<BundleContext> {
 
-	OSGiResult<T> run(BundleContext bundleContext);
+	public BundleContextOSGiImpl() {
+		super(bundleContext -> {
+			Pipe<Tuple<BundleContext>, Tuple<BundleContext>> added =
+				Pipe.create();
 
+			Consumer<Tuple<BundleContext>> addedSource = added.getSource();
+
+			return new OSGiResultImpl<>(
+				added, Pipe.create(),
+				() -> addedSource.accept(Tuple.create(bundleContext)),
+				NOOP);
+		});
+	}
 }

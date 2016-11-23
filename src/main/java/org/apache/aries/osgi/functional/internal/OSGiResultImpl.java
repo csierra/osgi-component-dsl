@@ -15,15 +15,33 @@
  * limitations under the License.
  */
 
-package org.apache.aries.osgi.functional;
+package org.apache.aries.osgi.functional.internal;
 
-import org.osgi.framework.BundleContext;
+import org.apache.aries.osgi.functional.OSGiResult;
 
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
+public class OSGiResultImpl<T> implements OSGiResult<T> {
 
-	OSGiResult<T> run(BundleContext bundleContext);
+	public Pipe<?, Tuple<T>> added;
+	public Pipe<?, Tuple<T>> removed;
+	public Runnable start;
+	public Runnable close;
+
+	public OSGiResultImpl(
+		Pipe<?, Tuple<T>> added, Pipe<?, Tuple<T>> removed,
+		Runnable start, Runnable close) {
+
+		this.added = added;
+		this.removed = removed;
+		this.start = start;
+		this.close = close;
+	}
+
+	@Override
+	public void close() {
+		close.run();
+	}
 
 }

@@ -15,15 +15,17 @@
  * limitations under the License.
  */
 
-package org.apache.aries.osgi.functional;
+package org.apache.aries.osgi.functional.internal;
 
-import org.osgi.framework.BundleContext;
+import org.apache.aries.osgi.functional.OSGi;
 
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
+public class NothingOSGiImpl<S> extends OSGiImpl<S> {
 
-	OSGiResult<T> run(BundleContext bundleContext);
-
+	public NothingOSGiImpl() {
+		super(((bundleContext) -> new OSGiResultImpl<>(
+			Pipe.create(), Pipe.create(), OSGi.NOOP, OSGi.NOOP)));
+	}
 }

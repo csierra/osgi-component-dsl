@@ -15,15 +15,33 @@
  * limitations under the License.
  */
 
-package org.apache.aries.osgi.functional;
+package org.apache.aries.osgi.functional.internal;
 
-import org.osgi.framework.BundleContext;
+import org.apache.aries.osgi.functional.MOSGi;
+import org.apache.aries.osgi.functional.OSGi;
+
+import java.util.function.Predicate;
 
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
+public class MOSGiImpl<T> extends OSGiImpl<T>
+	implements MOSGi<T> {
 
-	OSGiResult<T> run(BundleContext bundleContext);
+	MOSGiImpl(OSGiOperationImpl<T> operation) {
+		super(operation);
+	}
+
+	@Override
+	public OSGi<T> filter(Predicate<T> predicate) {
+		return flatMap(t -> {
+			if (predicate.test(t)) {
+				return OSGi.just(t);
+			}
+			else {
+				return OSGi.nothing();
+			}
+		});
+	}
 
 }

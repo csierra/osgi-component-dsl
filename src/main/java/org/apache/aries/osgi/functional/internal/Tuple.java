@@ -15,15 +15,30 @@
  * limitations under the License.
  */
 
-package org.apache.aries.osgi.functional;
 
-import org.osgi.framework.BundleContext;
+package org.apache.aries.osgi.functional.internal;
+
+import java.util.function.Function;
 
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
+class Tuple<T> {
 
-	OSGiResult<T> run(BundleContext bundleContext);
+	public Object original;
+	public T t;
+
+	private Tuple(Object original, T t) {
+		this.original = original;
+		this.t = t;
+	}
+
+	public <S> Tuple<S> map(Function<T, S> fun) {
+		return new Tuple<>(original, fun.apply(t));
+	}
+
+	public static <T> Tuple<T> create(T t) {
+		return new Tuple<>(t, t);
+	}
 
 }

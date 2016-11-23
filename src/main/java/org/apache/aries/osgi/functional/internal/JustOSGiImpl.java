@@ -15,34 +15,28 @@
  * limitations under the License.
  */
 
-package org.apache.aries.osgi.functional;
+
+package org.apache.aries.osgi.functional.internal;
+
+import org.apache.aries.osgi.functional.OSGi;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * @author Carlos Sierra Andrés
  */
-class Pipe<I, O> {
+public class JustOSGiImpl<S> extends OSGiImpl<S> {
 
-	Function<I, O> pipe;
+	public JustOSGiImpl(S s) {
+		super(((bundleContext) -> {
 
-	private Pipe(Function<I, O> fun) {
-		this.pipe = fun;
+			Pipe<Tuple<S>, Tuple<S>> added = Pipe.create();
+
+			Consumer<Tuple<S>> source = added.getSource();
+
+			return new OSGiResultImpl<>(
+				added, Pipe.create(),
+				() -> source.accept(Tuple.create(s)), OSGi.NOOP);
+		}));
 	}
-
-	static <T> Pipe<T, T> create() {
-		return new Pipe<>(x -> x);
-	}
-
-	Consumer<I> getSource() {
-		return i -> pipe.apply(i);
-	}
-
-	<U> Pipe<I, U> map(Function<O, U> fun) {
-		this.pipe = (Function)this.pipe.andThen(fun);
-
-		return (Pipe<I, U>)this;
-	}
-
 }

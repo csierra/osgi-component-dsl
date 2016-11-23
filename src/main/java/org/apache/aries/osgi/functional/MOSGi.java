@@ -17,13 +17,13 @@
 
 package org.apache.aries.osgi.functional;
 
-import org.osgi.framework.BundleContext;
+import java.util.function.Predicate;
 
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
+public interface MOSGi<T> extends OSGi<T> {
 
-	OSGiResult<T> run(BundleContext bundleContext);
+	OSGi<T> filter(Predicate<T> predicate);
 
 }

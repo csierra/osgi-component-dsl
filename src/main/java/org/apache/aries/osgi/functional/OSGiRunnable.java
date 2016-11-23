@@ -19,11 +19,13 @@ package org.apache.aries.osgi.functional;
 
 import org.osgi.framework.BundleContext;
 
+import java.util.function.Consumer;
+
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
-
+public interface OSGiRunnable<T> {
 	OSGiResult<T> run(BundleContext bundleContext);
 
+	OSGiResult<T> run(BundleContext bundleContext, Consumer<T> andThen);
 }

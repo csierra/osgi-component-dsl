@@ -15,15 +15,18 @@
  * limitations under the License.
  */
 
-package org.apache.aries.osgi.functional;
+package org.apache.aries.osgi.functional.internal;
 
-import org.osgi.framework.BundleContext;
+import org.apache.aries.osgi.functional.OSGiResult;
 
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
+class Tracked<T, S> {
 
-	OSGiResult<T> run(BundleContext bundleContext);
+	T service = null;
+	OSGiResult<S> program = null;
+
+	Tuple<S> result = null;
 
 }

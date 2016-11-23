@@ -17,13 +17,9 @@
 
 package org.apache.aries.osgi.functional;
 
-import org.osgi.framework.BundleContext;
-
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
-
-	OSGiResult<T> run(BundleContext bundleContext);
-
+public interface OSGiResult<T> {
+	public void close();
 }

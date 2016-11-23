@@ -15,15 +15,34 @@
  * limitations under the License.
  */
 
-package org.apache.aries.osgi.functional;
+package org.apache.aries.osgi.functional.internal;
 
-import org.osgi.framework.BundleContext;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
+class Pipe<I, O> {
 
-	OSGiResult<T> run(BundleContext bundleContext);
+	private Function<I, O> pipe;
+
+	private Pipe(Function<I, O> fun) {
+		this.pipe = fun;
+	}
+
+	public static <T> Pipe<T, T> create() {
+		return new Pipe<>(x -> x);
+	}
+
+	public Consumer<I> getSource() {
+		return i -> pipe.apply(i);
+	}
+
+	<U> Pipe<I, U> map(Function<O, U> fun) {
+		this.pipe = (Function)this.pipe.andThen(fun);
+
+		return (Pipe<I, U>)this;
+	}
 
 }

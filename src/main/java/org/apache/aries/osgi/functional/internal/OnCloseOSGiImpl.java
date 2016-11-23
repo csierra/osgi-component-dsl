@@ -15,15 +15,21 @@
  * limitations under the License.
  */
 
-package org.apache.aries.osgi.functional;
-
-import org.osgi.framework.BundleContext;
+package org.apache.aries.osgi.functional.internal;
 
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
+public class OnCloseOSGiImpl extends OSGiImpl<Void> {
 
-	OSGiResult<T> run(BundleContext bundleContext);
+	public OnCloseOSGiImpl(Runnable action) {
+		super(bundleContext -> {
+			Pipe<Tuple<Void>, Tuple<Void>> pipe = Pipe.create();
 
+			return new OSGiResultImpl<>(
+				pipe, Pipe.create(),
+				() -> pipe.getSource().accept(Tuple.create(null)),
+				action::run);
+		});
+	}
 }

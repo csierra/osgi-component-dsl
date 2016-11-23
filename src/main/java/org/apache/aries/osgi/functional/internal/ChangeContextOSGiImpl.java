@@ -15,15 +15,19 @@
  * limitations under the License.
  */
 
-package org.apache.aries.osgi.functional;
+package org.apache.aries.osgi.functional.internal;
 
+import org.apache.aries.osgi.functional.OSGi;
 import org.osgi.framework.BundleContext;
 
 /**
  * @author Carlos Sierra Andrés
  */
-public interface OSGiOperation<T> {
+public class ChangeContextOSGiImpl<T> extends OSGiImpl<T> {
 
-	OSGiResult<T> run(BundleContext bundleContext);
+	public ChangeContextOSGiImpl(
+		OSGi<T> program, BundleContext bundleContext) {
 
+		super(b -> ((OSGiImpl<T>) program)._operation.run(bundleContext));
+	}
 }
